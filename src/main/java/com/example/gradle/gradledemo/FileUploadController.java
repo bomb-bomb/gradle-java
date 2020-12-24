@@ -1,6 +1,7 @@
 package com.example.gradle.gradledemo;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.example.gradle.gradledemo.storage.FileSystemStorageService;
@@ -31,11 +32,12 @@ public class FileUploadController {
     @GetMapping(path = "/list")
     public String listUploadedFiles(Model model) throws IOException {
         System.out.println("===================================================================");
+
+        System.out.println(Arrays.toString(storageService.loadAll().toArray()));
         model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-                        "serveFile", path.getFileName().toString()).build().toUri().toString())
-                .collect(Collectors.toList()));
-
+                        "serveFile", path.getFileName().toString()).build().toUri().toString()
+        ).collect(Collectors.toList()));
         return "uploadForm";
     }
 
@@ -56,7 +58,7 @@ public class FileUploadController {
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
 
-        return "redirect:/";
+        return "redirect:/upload/list";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
