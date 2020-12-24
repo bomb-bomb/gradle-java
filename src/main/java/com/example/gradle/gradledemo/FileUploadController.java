@@ -30,7 +30,7 @@ public class FileUploadController {
     }
 
     @GetMapping(path = "/list")
-    public String listUploadedFiles(Model model) throws IOException {
+    public String listUploadedFiles(Model model) {
         System.out.println("===================================================================");
 
         System.out.println(Arrays.toString(storageService.loadAll().toArray()));
