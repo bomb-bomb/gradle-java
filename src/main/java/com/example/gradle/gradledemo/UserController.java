@@ -3,8 +3,10 @@ package com.example.gradle.gradledemo;
 import com.example.gradle.gradledemo.accessingdatamysql.User;
 import com.example.gradle.gradledemo.accessingdatamysql.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController // This means that this class is a Controller
 @RequestMapping(path="/user") // This means URL's start with /demo (after Application path)
@@ -14,15 +16,17 @@ public class UserController {
     private UserRepository userRepository;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
-    public @ResponseBody String addNewUser (@RequestParam String name
-            , @RequestParam String email) {
+    public @ResponseBody String addNewUser (@RequestBody @Valid User user, BindingResult error) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
+        if(error.hasErrors()) {
+            return error.getAllErrors().get(0).getDefaultMessage();
+        }
 
-        User n = new User();
-        n.setName(name);
-        n.setEmail(email);
-        userRepository.save(n);
+        System.out.println(error.getAllErrors());
+        System.out.println(user.getName());
+
+        userRepository.save(user);
         return "Saved";
     }
 
