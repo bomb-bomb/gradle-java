@@ -2,6 +2,10 @@ package com.example.gradle.gradledemo;
 
 import com.example.gradle.gradledemo.accessingdatamysql.User;
 //import com.example.gradle.gradledemo.accessingdatamysql.UserRepository;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +36,46 @@ public class UserController {
         return success(user.save(false), "ok");
     }
 
+    @RequiresRoles("admin")
     @GetMapping(path="/all")
     public @ResponseBody Map<String, Object> getAllUsers() throws SQLException {
+        Subject currentUser = SecurityUtils.getSubject();
+
+        try {
+            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+            currentUser.login(token);
+            //if no exception, that's it, we're done!
+        } catch ( UnknownAccountException uae ) {
+            //username wasn't in the system, show them an error message?
+        } catch ( IncorrectCredentialsException ice ) {
+            //password didn't match, try again?
+        } catch ( LockedAccountException lae ) {
+            //account for that username is locked - can't login.  Show them a message?
+        // ... more types exceptions to check if you want ...
+        } catch ( AuthenticationException ae ) {
+            //unexpected condition - error?
+        }
+
         // This returns a JSON or XML with the users
         return success(User.queryAll(), "ok");
+    }
+
+    @PostMapping(path="/login") // Map ONLY POST Requests
+    public @ResponseBody Map<String, Object> userLogin (@RequestBody @Valid User user, BindingResult error) throws SQLException {
+        Subject currentUser = SecurityUtils.getSubject();
+
+        if ( !currentUser.isAuthenticated() ) {
+            //collect user principals and credentials in a gui specific manner
+            //such as username/password html form, X509 certificate, OpenID, etc.
+            //We'll use the username/password example here since it is the most common.
+            //(do you know what movie this is from? ;)
+            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+            //this is all you have to do to support 'remember me' (no config - built in!):
+            token.setRememberMe(true);
+            currentUser.login(token);
+        }
+
+        return success(user.save(false), "ok");
     }
 
     private Map<String, Object> success(Object data, String message) {

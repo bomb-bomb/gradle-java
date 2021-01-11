@@ -25,7 +25,11 @@ dependencies {
 
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 
+	compile 'org.apache.shiro:shiro-spring:1.7.0'
+
 	implementation 'com.github.braisdom:objsql-springboot:1.3.4'
+
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
 	runtimeOnly 'mysql:mysql-connector-java'
 

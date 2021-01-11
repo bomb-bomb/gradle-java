@@ -4,7 +4,10 @@ import com.example.gradle.gradledemo.messagingrabbitmq.Receiver;
 import com.example.gradle.gradledemo.models.Quote;
 import com.example.gradle.gradledemo.storage.FileSystemStorageService;
 import com.example.gradle.gradledemo.storage.StorageProperties;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +29,8 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+
+import javax.annotation.PostConstruct;
 
 @SuppressWarnings("ALL")
 @SpringBootApplication
