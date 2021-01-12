@@ -60,8 +60,8 @@ public class UserController {
         return success(User.queryAll(), "ok");
     }
 
-    @PostMapping(path="/login") // Map ONLY POST Requests
-    public @ResponseBody Map<String, Object> userLogin (@RequestBody @Valid User user, BindingResult error) throws SQLException {
+    @PostMapping(path="/login")
+    public @ResponseBody Map<String, Object> userLogin () {
         Subject currentUser = SecurityUtils.getSubject();
 
         if ( !currentUser.isAuthenticated() ) {
@@ -75,7 +75,7 @@ public class UserController {
             currentUser.login(token);
         }
 
-        return success(user.save(false), "ok");
+        return success("", "ok");
     }
 
     @GetMapping(path="/login") // Map ONLY POST Requests

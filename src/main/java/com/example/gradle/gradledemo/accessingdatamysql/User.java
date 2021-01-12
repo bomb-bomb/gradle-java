@@ -9,6 +9,7 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 @DomainModel
@@ -27,5 +28,5 @@ public class User {
     /**
      * 用户对应的角色集合
      */
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 }

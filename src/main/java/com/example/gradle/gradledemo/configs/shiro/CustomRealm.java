@@ -15,6 +15,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.thymeleaf.util.StringUtils;
 
+import java.util.Objects;
+
 public class CustomRealm extends AuthorizingRealm {
 
     @Autowired
@@ -44,17 +46,19 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        if (StringUtils.isEmpty(authenticationToken.getPrincipal().toString())) {
+        String principal = null == authenticationToken.getPrincipal() ? "" : authenticationToken.getPrincipal().toString();
+        if (StringUtils.isEmpty(principal)) {
             return null;
         }
-        //获取用户信息
-        String name = authenticationToken.getPrincipal().toString();
+
+        // 获取用户信息
+        String name = Objects.requireNonNull(authenticationToken.getPrincipal()).toString();
         User user = loginService.getUserByName(name);
         if (user == null) {
-            //这里返回后会报出对应异常
+            // 这里返回后会报出对应异常
             return null;
         } else {
-            //这里验证authenticationToken和simpleAuthenticationInfo的信息
+            // 这里验证authenticationToken和simpleAuthenticationInfo的信息
             return new SimpleAuthenticationInfo(name, user.getPassword(), getName());
         }
     }
