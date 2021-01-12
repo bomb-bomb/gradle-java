@@ -78,6 +78,24 @@ public class UserController {
         return success(user.save(false), "ok");
     }
 
+    @GetMapping(path="/login") // Map ONLY POST Requests
+    public @ResponseBody Map<String, Object> userLoginPage (@RequestBody @Valid User user, BindingResult error) throws SQLException {
+        Subject currentUser = SecurityUtils.getSubject();
+
+        if ( !currentUser.isAuthenticated() ) {
+            //collect user principals and credentials in a gui specific manner
+            //such as username/password html form, X509 certificate, OpenID, etc.
+            //We'll use the username/password example here since it is the most common.
+            //(do you know what movie this is from? ;)
+            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+            //this is all you have to do to support 'remember me' (no config - built in!):
+            token.setRememberMe(true);
+            currentUser.login(token);
+        }
+
+        return success(user.save(false), "ok");
+    }
+
     private Map<String, Object> success(Object data, String message) {
         Map<String, Object> map = new HashMap<>(3);
 

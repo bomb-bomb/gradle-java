@@ -3,6 +3,7 @@ package com.example.gradle.gradledemo.messagingrabbitmq;
 import java.util.concurrent.TimeUnit;
 
 import com.example.gradle.gradledemo.GradledemoApplication;
+import com.example.gradle.gradledemo.configs.queue.QueueConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Sending message...");
-        rabbitTemplate.convertAndSend(GradledemoApplication.topicExchangeName, "foo.bar.baz", "Hello from RabbitMQ!");
-        receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
+        rabbitTemplate.convertAndSend(QueueConfig.topicExchangeName, "foo.bar.baz", "Hello from RabbitMQ!");
+        boolean a = receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
     }
 }
