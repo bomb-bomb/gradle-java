@@ -1,9 +1,10 @@
 package com.example.gradle.gradledemo.configs.shiro;
 
-import com.example.gradle.gradledemo.accessingdatamysql.Permissions;
-import com.example.gradle.gradledemo.accessingdatamysql.Role;
-import com.example.gradle.gradledemo.accessingdatamysql.User;
+import com.example.gradle.gradledemo.data.Permissions;
+import com.example.gradle.gradledemo.data.Role;
+import com.example.gradle.gradledemo.data.User;
 import com.example.gradle.gradledemo.services.LoginService;
+import lombok.SneakyThrows;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -22,12 +23,14 @@ public class CustomRealm extends AuthorizingRealm {
     @Autowired
     private LoginService loginService;
 
+    @SneakyThrows
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //获取登录用户名
         String name = (String) principalCollection.getPrimaryPrincipal();
         //查询用户名称
         User user = loginService.getUserByName(name);
+        System.out.println("user >");
         //添加角色和权限
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         for (Role role : user.getRoles()) {
@@ -44,22 +47,24 @@ public class CustomRealm extends AuthorizingRealm {
     /**
      *  认证配置类
      */
+    @SneakyThrows
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String principal = null == authenticationToken.getPrincipal() ? "" : authenticationToken.getPrincipal().toString();
         if (StringUtils.isEmpty(principal)) {
             return null;
         }
-
         // 获取用户信息
         String name = Objects.requireNonNull(authenticationToken.getPrincipal()).toString();
         User user = loginService.getUserByName(name);
+        System.out.println(user.getName());
+        System.out.println(name);
         if (user == null) {
             // 这里返回后会报出对应异常
             return null;
         } else {
             // 这里验证authenticationToken和simpleAuthenticationInfo的信息
-            return new SimpleAuthenticationInfo(name, user.getPassword(), getName());
+            return new SimpleAuthenticationInfo(name, user.getName(), getName());
         }
     }
 }
