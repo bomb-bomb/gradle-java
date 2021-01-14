@@ -3,7 +3,7 @@ package com.example.gradle.gradledemo.configs.shiro;
 import com.example.gradle.gradledemo.data.Permissions;
 import com.example.gradle.gradledemo.data.Role;
 import com.example.gradle.gradledemo.data.User;
-import com.example.gradle.gradledemo.services.LoginService;
+import com.example.gradle.gradledemo.services.UserService;
 import lombok.SneakyThrows;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -21,7 +21,7 @@ import java.util.Objects;
 public class CustomRealm extends AuthorizingRealm {
 
     @Autowired
-    private LoginService loginService;
+    private UserService loginService;
 
     @SneakyThrows
     @Override

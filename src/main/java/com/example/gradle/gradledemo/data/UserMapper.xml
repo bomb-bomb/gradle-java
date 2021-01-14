@@ -28,4 +28,8 @@
     <select id="all" resultMap="allMap">
         SELECT * FROM users
     </select>
+
+    <insert id="save">
+        INSERT INTO users (name, email) VALUES (#{name}, #{email})
+    </insert>
  </mapper>

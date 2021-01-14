@@ -9,4 +9,6 @@ public interface UserMapper {
     User Sel(String username);
 
     Set<User> all();
+
+    Integer save(String name, String email);
 }

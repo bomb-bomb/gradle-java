@@ -1,10 +1,7 @@
 package com.example.gradle.gradledemo;
 
 import com.example.gradle.gradledemo.data.User;
-import com.example.gradle.gradledemo.data.UserMapper;
-import com.example.gradle.gradledemo.services.LoginService;
 import com.example.gradle.gradledemo.services.UserService;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -18,31 +15,28 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController // This means that this class is a Controller
-@RequestMapping(path="/user") // This means URL's start with /demo (after Application path)
+@RestController
+@RequestMapping(path="/user")
 public class UserController {
     @Autowired
-    private LoginService loginService;
+    private UserService userService;
 
-    @PostMapping(path="/add") // Map ONLY POST Requests
+    @PostMapping(path="/add")
     public @ResponseBody Map<String, Object> addNewUser (@RequestBody @Valid User user, BindingResult error) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
         if(error.hasErrors()) {
             return success("", error.getAllErrors().get(0).getDefaultMessage());
         }
 
-        System.out.println(error.getAllErrors());
+        System.out.println(user.getEmail());
         System.out.println(user.getName());
 
-        return success("", "ok");
+        return success(userService.save(user), "ok");
     }
 
     @RequiresRoles("admin")
     @GetMapping(path="/all")
-    public @ResponseBody Map<String, Object> getAllUsers() throws SQLException {
-        // This returns a JSON or XML with the users
-        return success(loginService.getAll(), "ok");
+    public @ResponseBody Map<String, Object> getAllUsers() {
+        return success(userService.getAll(), "ok");
     }
 
     @PostMapping(path="/login")
@@ -77,20 +71,10 @@ public class UserController {
         return success("已经登录", "ok");
     }
 
-    @GetMapping(path="/login") // Map ONLY POST Requests
+    @GetMapping(path="/login") // 登录页面
     public @ResponseBody Map<String, Object> userLoginPage (@RequestBody @Valid User user, BindingResult error) {
         Subject currentUser = SecurityUtils.getSubject();
 
-        if ( !currentUser.isAuthenticated() ) {
-            //collect user principals and credentials in a gui specific manner
-            //such as username/password html form, X509 certificate, OpenID, etc.
-            //We'll use the username/password example here since it is the most common.
-            //(do you know what movie this is from? ;)
-            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
-            //this is all you have to do to support 'remember me' (no config - built in!):
-            token.setRememberMe(true);
-            currentUser.login(token);
-        }
 
         return success("user.save(false)", "ok");
     }
