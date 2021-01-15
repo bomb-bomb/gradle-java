@@ -10,5 +10,5 @@ public interface UserMapper {
 
     Set<User> all();
 
-    Integer save(String name, String email);
+    Integer save(User user);
 }

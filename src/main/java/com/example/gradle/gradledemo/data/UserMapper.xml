@@ -29,7 +29,7 @@
         SELECT * FROM users
     </select>
 
-    <insert id="save">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (name, email) VALUES (#{name}, #{email})
     </insert>
  </mapper>

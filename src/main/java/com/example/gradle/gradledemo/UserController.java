@@ -75,7 +75,6 @@ public class UserController {
     public @ResponseBody Map<String, Object> userLoginPage (@RequestBody @Valid User user, BindingResult error) {
         Subject currentUser = SecurityUtils.getSubject();
 
-
         return success("user.save(false)", "ok");
     }
 

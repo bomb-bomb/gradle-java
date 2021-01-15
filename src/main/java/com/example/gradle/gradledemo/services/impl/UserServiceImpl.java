@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer save(User user) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        return mapper.save(user.getName(), user.getEmail());
+        mapper.save(user);
+        return user.getId();
     }
 }

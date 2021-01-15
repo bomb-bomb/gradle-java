@@ -6,10 +6,15 @@ plugins {
 
 group = 'com.example.gradle'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
+}
+
+repositories {
+	maven {
+		url "http://maven.aliyun.com/nexus/content/groups/public"
+	}
 }
 
 dependencies {
@@ -22,12 +27,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.data:spring-data-redis'
+	implementation 'io.lettuce:lettuce-core'
 
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 
 	compile 'org.apache.shiro:shiro-spring:1.7.0'
 
 	compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+
+	compile 'cn.hutool:hutool-all:5.5.7'
 
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
@@ -45,7 +54,6 @@ dependencies {
 sourceSets {
 	main {
 		resources {
-			//可以将java目录下的所有非.java资源打包到classes下
 			srcDir 'src/main/java'
 		}
 	}
