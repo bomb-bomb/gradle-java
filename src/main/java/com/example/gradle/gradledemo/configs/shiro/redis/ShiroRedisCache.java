@@ -26,7 +26,8 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
             return null;
         }
         byte[] bytes = getBytesKey(k);
-        return (V)redisTemplate.opsForValue().get(bytes);
+
+        return (V) redisTemplate.opsForValue().get(bytes);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class ShiroRedisCache<K, V> implements Cache<K, V> {
             return null;
         }
         byte[] bytes =getBytesKey(k);
-        V v = (V)redisTemplate.opsForValue().get(bytes);
+        V v = (V) redisTemplate.opsForValue().get(bytes);
         redisTemplate.delete(bytes);
         return v;
     }
